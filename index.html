@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TRL Real P2P Multiplayer Space Simulator</title>
+    <title>TRL Butcher Simulator Multiplayer</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/chr15m/bugout/bugout.min.js"></script>
     <style>
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            overflow: hidden; background-color: #010103;
+            overflow: hidden; background-color: #0c0808;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             user-select: none; -webkit-user-select: none; color: white;
         }
@@ -18,50 +18,58 @@
         .screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; justify-content: center;
-            align-items: center; z-index: 100; background-color: #020207;
+            align-items: center; z-index: 100; background-color: #140d0d;
         }
         
-        .loader-bar { width: 280px; height: 10px; background-color: #111; border-radius: 5px; overflow: hidden; margin-top: 20px; }
-        .loader-progress { width: 0%; height: 100%; background: linear-gradient(90deg, #00ffff, #ff4500); }
+        /* شريط التحميل */
+        .loader-bar { width: 260px; height: 8px; background-color: #221515; border-radius: 4px; overflow: hidden; margin-top: 15px; }
+        .loader-progress { width: 0%; height: 100%; background: linear-gradient(90deg, #ff4500, #ffcc00); }
 
         .menu-container {
-            background: rgba(4, 4, 15, 0.93); padding: 30px; border-radius: 25px;
-            border: 1px solid rgba(0, 255, 255, 0.25); text-align: center;
-            box-shadow: 0 0 35px rgba(0, 255, 255, 0.3); z-index: 102; backdrop-filter: blur(10px);
-            width: 85%; max-width: 320px;
+            background: rgba(25, 15, 15, 0.95); padding: 25px; border-radius: 20px;
+            border: 1px solid rgba(255, 69, 0, 0.3); text-align: center;
+            box-shadow: 0 0 30px rgba(255,69,0,0.2); width: 85%; max-width: 310px;
         }
         .menu-btn {
             width: 100%; padding: 12px; margin: 8px 0; font-size: 15px;
-            background-color: rgba(255,255,255,0.04); color: white; border: 1px solid #444;
-            border-radius: 25px; cursor: pointer; font-weight: bold; transition: 0.3s;
+            background-color: rgba(255,255,255,0.04); color: white; border: 1px solid #553333;
+            border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.2s;
         }
-        .menu-btn:hover { background: #00ffff; color: black; border-color: #00ffff; box-shadow: 0 0 15px #00ffff; }
-        #startBtn { background: #ff4500; border-color: #ff4500; }
+        .menu-btn:hover { background: #ff4500; color: white; border-color: #ff4500; box-shadow: 0 0 15px #ff4500; }
 
         .input-field {
-            width: 90%; padding: 11px; margin: 10px 0; border-radius: 15px;
-            border: 1px solid #555; background: #0c0c14; color: white; text-align: center; font-size: 16px;
+            width: 90%; padding: 11px; margin: 10px 0; border-radius: 12px;
+            border: 1px solid #663333; background: #1a0f0f; color: white; text-align: center; font-size: 15px;
         }
 
+        /* واجهات تليمتري اللعب HUD */
         #hud-container {
             position: absolute; top: 15px; left: 15px; z-index: 10;
-            background: rgba(2,2,8,0.85); padding: 15px; border-radius: 15px;
-            border: 1px solid #00ffff; font-size: 13px; line-height: 1.6; pointer-events: none;
-            box-shadow: 0 0 15px rgba(0,255,255,0.1);
+            background: rgba(20,10,10,0.85); padding: 15px; border-radius: 15px;
+            border: 1px solid #ff4500; font-size: 13px; line-height: 1.5; pointer-events: none;
+            width: 200px;
         }
+        #order-box {
+            position: absolute; top: 15px; right: 15px; z-index: 10;
+            background: rgba(10,25,10,0.85); padding: 15px; border-radius: 15px;
+            border: 1px solid #00ff00; font-size: 14px; text-align: right; pointer-events: none;
+        }
+        #controls-panel {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 10; display: none; gap: 15px;
+        }
+        .action-btn {
+            padding: 15px 35px; font-size: 18px; font-weight: bold; color: white;
+            border: none; border-radius: 25px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        #cutBtn { background: #ff4500; }
+        #nextBtn { background: #ffcc00; color: black; }
         
-        #mobile-controls {
-            position: absolute; bottom: 20px; left: 0; width: 100%;
-            display: none; justify-content: space-between; padding: 0 30px;
-            box-sizing: border-box; z-index: 10;
+        .shop-grid { display: flex; flex-direction: column; gap: 8px; margin: 15px 0; }
+        .shop-item {
+            background: rgba(255,255,255,0.05); padding: 8px; border-radius: 10px;
+            display: flex; justify-content: space-between; align-items: center; font-size: 12px;
         }
-        .joy-btn {
-            width: 70px; height: 70px; background: rgba(255,255,255,0.1);
-            border: 2px solid rgba(255,255,255,0.3); border-radius: 50%;
-            color: white; font-size: 24px; display: flex; justify-content: center; align-items: center;
-        }
-        #thrustBtn { background: rgba(255, 69, 0, 0.4); border-color: #ff4500; width: 80px; height: 80px; }
-        #netStatus { font-size: 12px; color: #ff3333; margin-top: 5px; font-weight: bold;}
     </style>
 </head>
 <body>
@@ -69,50 +77,63 @@
     <div id="webgl-container"></div>
 
     <div id="loadingScreen" class="screen" style="z-index: 150;">
-        <h2>تجهيز محرك الـ P2P الحقيقي...</h2>
+        <h2 style="color: #ff4500;">جاري شحذ السكاكين وتجهيز المسلخ... 👀</h2>
         <div class="loader-bar"><div class="loader-progress" id="progress"></div></div>
-        <p id="loadingText" style="color: #666; margin-top: 10px;">0%</p>
+        <p id="loadingText" style="color: #666; margin-top: 8px;">0%</p>
     </div>
 
     <div id="mainMenuScreen" class="screen" style="display:none; background: transparent; z-index: 100;">
         <div class="menu-container">
-            <h1 style="margin: 0 0 5px 0; font-size: 26px; color: #00ffff; letter-spacing: 1px;">TRL P2P NET</h1>
-            <p style="margin: 0 0 20px 0; font-size: 11px; color: #888;">سباق بنزين ومزامنة لاعبين حقيقية 🌐</p>
-            <button class="menu-btn" id="startBtn" onclick="openMultiplayerMenu()">MULTIPLAYER (رومات حقيقية)</button>
-            <button class="menu-btn" onclick="alert('TRL TEAM - Real WebRTC Engine 2026')">DEVELOPER TEAM</button>
+            <h1 style="margin: 0 0 5px 0; font-size: 24px; color: #ff4500;">TRL BUTCHER SIM</h1>
+            <p style="margin: 0 0 20px 0; font-size: 11px; color: #aaa;">محاكاة تقطيع اللحم وإدارة الجزارة أونلاين 🥩</p>
+            <button class="menu-btn" onclick="goToMultiplayerMenu()">DASHBOARD / اللعب الجماعي</button>
+            <button class="menu-btn" onclick="alert('TRL TEAM - Meat Physics Simulator 2026')">DEVELOPER TEAM</button>
         </div>
     </div>
 
-    <div id="multiplayerScreen" class="screen" style="display:none; background: rgba(2,2,7,0.96); z-index: 105;">
+    <div id="multiplayerScreen" class="screen" style="display:none; background: rgba(15,10,10,0.97); z-index: 105;">
         <div class="menu-container">
-            <h2 style="margin-top:0; color:#00ffff;">شبكة الغرف الحية</h2>
-            <p style="font-size:11px; color:#aaa; margin:0;">اكتب نفس كلمة السر لتتصل فوراً بجهاز صديقك</p>
-            <input type="text" id="roomPassword" class="input-field" placeholder="رقم أو كلمة سر الغرفة...">
-            <button class="menu-btn" style="background:#00ff00; color:black; border:none;" onclick="connectToP2PRoom()">⚡ اتصال وبدء المزامنة</button>
+            <h3 style="margin-top:0; color:#ffcc00;">دخول المسلخ الجماعي 🌐</h3>
+            <input type="text" id="roomPassword" class="input-field" placeholder="اكتب كلمة سر الغرفة لتدخل مع ربعك...">
+            
+            <h4 style="margin: 10px 0 0 0; color: #ff4500; text-align: right;">ترقية السكاكين والأدوات:</h4>
+            <div class="shop-grid">
+                <div class="shop-item">
+                    <span>🔪 ساطور احترافي (دقة +)</span>
+                    <button style="background:#ffcc00; border:none; border-radius:5px;" onclick="buyTool(200)">💰 200</button>
+                </div>
+                <div class="shop-item">
+                    <span>🪚 منشار كهربائي (سرعة ++)</span>
+                    <button style="background:#ffcc00; border:none; border-radius:5px;" onclick="buyTool(500)">💰 500</button>
+                </div>
+            </div>
+
+            <button class="menu-btn" style="background:#00ff00; color:black; border:none;" onclick="startButcherGameplay()">🥩 ابدأ التقطيع والبيع</button>
             <button class="menu-btn" onclick="backToMenu()">🔙 عودة</button>
         </div>
     </div>
 
     <div id="hud-container" style="display: none;">
-        <div style="color: #00ffff; font-weight: bold;">🔑 الغرفة: <span id="hudRoom">None</span></div>
-        <div id="netStatus">⏳ جاري البحث عن لاعبين بالروم...</div>
-        <hr style="border-color: #222;">
-        <div style="color:#00ffff;"><b>🚀 مركبتك الفضائية:</b></div>
-        <div>بنزين: <span id="myFuel">100%</span> | ارتفاع: <span id="myAlt">0</span>m</div>
-        <br>
-        <div style="color:#ff4500;"><b>🛸 اللاعب الآخر (حقيقي):</b></div>
-        <div>بنزين: <span id="oppFuel">100%</span> | ارتفاع: <span id="oppAlt">0</span>m</div>
+        <div style="color: #ffcc00; font-weight: bold; font-size:15px;">💰 الكاش: <span id="hudMoney">0</span>$</div>
+        <div style="color: #aaa; font-size:11px; margin-top:4px;">الأداة: <span id="hudTool">سكين عادي 🔪</span></div>
+        <hr style="border-color: #331a1a;">
+        <div style="font-size:11px; color:#ff4500; font-weight:bold;">🏆 ترتيب السيرفر (P2P):</div>
+        <div id="leaderboardBox" style="font-size:11px; color:#fff;">أنت: 0$ <br> جاري البحث عن جزارين...</div>
     </div>
 
-    <div id="mobile-controls">
-        <div style="display:flex; gap:15px;">
-            <div class="joy-btn" id="leftBtn">◀</div>
-            <div class="joy-btn" id="rightBtn">▶</div>
-        </div>
-        <div class="joy-btn" id="thrustBtn">🔥</div>
+    <div id="order-box" style="display: none;">
+        <div style="color: #00ff00; font-weight: bold;">🧑‍🦱 طلب الزبون الحالي:</div>
+        <div style="font-size: 16px; margin: 5px 0;" id="orderText">مطلوب: 150 جرام لحم بقر</div>
+        <div style="font-size: 11px; color: #ccc;">الوزن المقطوع الحالي: <span id="cutWeightText">0</span> جم</div>
+    </div>
+
+    <div id="controls-panel">
+        <button class="action-btn" id="cutBtn" onclick="executeMeatCut()">قطع اللحم 🔪</button>
+        <button class="action-btn" id="nextBtn" onclick="generateNewOrder()" style="display: none;">ذبيحة جديدة ➔</button>
     </div>
 
     <script>
+        // --- شاشة التحميل الافتتاحية (10 ثوانٍ) ---
         let progress = 0;
         const loadTimer = setInterval(() => {
             progress += 2;
@@ -124,9 +145,9 @@
             }
             document.getElementById('loadingText').innerText = progress + "%";
             document.getElementById('progress').style.width = progress + "%";
-        }, 50);
+        }, 100);
 
-        function openMultiplayerMenu() {
+        function goToMultiplayerMenu() {
             document.getElementById('mainMenuScreen').style.display = 'none';
             document.getElementById('multiplayerScreen').style.display = 'flex';
         }
@@ -135,237 +156,211 @@
             document.getElementById('mainMenuScreen').style.display = 'flex';
         }
 
-        // --- محرك الشبكة الحقيقي (WebRTC P2P Real MultiPlayer) ---
-        let bgt = null;
-        let peerConnected = false;
-        let opponentNetData = { x: 4, y: -8, fuel: 100, altitude: 0 };
+        // --- محرك الاقتصاد والترقيات والشبكة ---
+        let myMoney = 0;
+        let activeTool = "سكين عادي 🔪";
+        let currentTargetWeight = 150;
+        let appState = "loading";
+        let bugoutNet = null;
+        let otherButchers = {};
 
-        function connectToP2PRoom() {
-            let roomPass = document.getElementById('roomPassword').value.trim();
-            if(!roomPass) { alert("من فضلك اكتب كلمة سر الروم!"); return; }
-
-            document.getElementById('multiplayerScreen').style.display = 'none';
-            document.getElementById('hud-container').style.display = 'block';
-            if(window.innerWidth < 900) document.getElementById('mobile-controls').style.display = 'flex';
-            document.getElementById('hudRoom').innerText = roomPass;
-
-            appState = "playing";
-            init3DScene();
-
-            // ربط القناة اللاسلكية المشفرة بين الأجهزة بناءً على الباسورد
-            bgt = new Bugout("trl-space-room-" + roomPass);
-
-            bgt.on("seen", (address) => {
-                peerConnected = true;
-                document.getElementById("netStatus").innerText = "● تم اتصال اللاعب الآخر بنجاح! 🟢";
-                document.getElementById("netStatus").style.color = "#00ff00";
-            });
-
-            bgt.on("message", (address, data) => {
-                if (data && data.type === "sync") {
-                    opponentNetData.x = data.x;
-                    opponentNetData.y = data.y;
-                    opponentNetData.fuel = data.fuel;
-                    opponentNetData.altitude = data.alt;
-                }
-            });
-
-            // إرسال إحداثياتك الحالية وجزيئات البنزين لصديقك كل 45 ملي ثانية
-            setInterval(() => {
-                if(appState === "playing" && bgt) {
-                    bgt.send({
-                        type: "sync",
-                        x: myShip.position.x,
-                        y: myShip.position.y,
-                        fuel: Math.floor((myTelemetry.fuel / myTelemetry.maxFuel) * 100),
-                        alt: myTelemetry.altitude
-                    });
-                }
-            }, 45);
+        function buyTool(cost) {
+            if(myMoney >= cost) {
+                myMoney -= cost;
+                activeTool = cost === 200 ? "ساطور احترافي 🪓" : "منشار كهربائي 🪚";
+                document.getElementById('hudTool').innerText = activeTool;
+                document.getElementById('hudMoney').innerText = myMoney;
+                alert("تم شراء الترقية بنجاح! دقة وسرعة التقطيع زادت 🔥");
+            } else {
+                alert("الكاش غير كافي! قطّع المزيد من اللحم للزبائن أولاً 💰");
+            }
         }
 
-        // --- محرك الرسومات ثلاثي الأبعاد المتقدم والواقعي (Three.js Engine) ---
-        let scene, camera, renderer, starField, menuMesh;
-        let myShip, opponentShip, fuelTanks = [], fireParticles = [];
-        let appState = "loading";
-        let controls = { left: false, right: false, thrust: false };
-        let myTelemetry = { fuel: 1000, maxFuel: 1000, altitude: 0 };
+        function startButcherGameplay() {
+            let roomPass = document.getElementById('roomPassword').value.trim() || "TRL-Butchers";
+            document.getElementById('multiplayerScreen').style.display = 'none';
+            document.getElementById('hud-container').style.display = 'block';
+            document.getElementById('order-box').style.display = 'block';
+            document.getElementById('controls-panel').style.display = 'flex';
+            
+            appState = "playing";
+            init3DButcherTable();
+            generateNewOrder();
 
-        function initCore() {
+            // ربط السيرفر واللاعبين الحقيقيين أونلاين عبر الـ P2P ببلاش
+            bugoutNet = new Bugout("trl-butcher-room-" + roomPass);
+            bugoutNet.on("message", (address, data) => {
+                if(data && data.type === "sync_score") {
+                    otherButchers[address] = data.money;
+                    updateLeaderboardUI();
+                }
+            });
+
+            // إرسال الكاش الخاص بك لبقية الجزارين في السيرفر لتحديث لوحة الصدارة فورياً
+            setInterval(() => {
+                if(appState === "playing" && bugoutNet) {
+                    bugoutNet.send({ type: "sync_score", money: myMoney });
+                }
+            }, 1000);
+        }
+
+        function updateLeaderboardUI() {
+            let html = `أنت: ${myMoney}$ <br>`;
+            let count = 1;
+            for (let peer in otherButchers) {
+                if(count <= 3) {
+                    html += `جزار منافس: ${otherButchers[peer]}$ 🔴<br>`;
+                    count++;
+                }
+            }
+            document.getElementById('leaderboardBox').innerHTML = html;
+        }
+
+        function generateNewOrder() {
+            // توليد طلب عشوائي بوزن محدد من اللحوم
+            let types = ["لحم بقر 🐂", "لحم غنم 🐑", "لحم عجل 🐂", "لحم دجاج 🐓"];
+            let randomType = types[Math.floor(Math.random() * types.length)];
+            currentTargetWeight = THREE.MathUtils.randInt(80, 280);
+            
+            document.getElementById('orderText').innerText = `مطلوب: ${currentTargetWeight} جرام من ${randomType}`;
+            document.getElementById('cutWeightText').innerText = "0";
+            document.getElementById('nextBtn').style.display = "none";
+            document.getElementById('cutBtn').style.display = "block";
+
+            // إعادة بناء قطعة اللحم الاسطوانية على الطاولة ثلاثية الأبعاد
+            resetMeatMesh();
+        }
+
+        // --- محرك الرسومات ثلاثي الأبعاد وفيزياء التقطيع (Three.js WebGL) ---
+        let scene, camera, renderer, tableMesh, meatMesh, knifeMesh;
+        let isKnifeAnimating = false, knifeDirection = -1;
+
+        function initCoreEngine() {
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             document.getElementById('webgl-container').appendChild(renderer.domElement);
 
-            scene.add(new THREE.AmbientLight(0x666666));
-            let light = new THREE.DirectionalLight(0xffffff, 1.2); light.position.set(5, 15, 10); scene.add(light);
+            scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+            let sun = new THREE.DirectionalLight(0xffeedd, 0.8); sun.position.set(5, 12, 8); scene.add(sun);
 
-            let starGeo = new THREE.BufferGeometry();
-            let starPos = [];
-            for(let i=0; i<1200; i++) starPos.push(THREE.MathUtils.randFloatSpread(400), THREE.MathUtils.randFloatSpread(400), THREE.MathUtils.randFloatSpread(400));
-            starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPos, 3));
-            starField = new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.5 }));
-            scene.add(starField);
+            //สร้าง البيئة المحيطة (خلفية المطبخ والمسلخ اللطيفة)
+            scene.background = new THREE.Color(0x1a1010);
 
-            menuMesh = new THREE.Mesh(new THREE.ConeGeometry(1, 4, 5), new THREE.MeshBasicMaterial({ color: 0x00ffff, wireframe: true }));
-            menuMesh.position.set(0, -15, -20);
-            scene.add(menuMesh);
-            camera.position.z = 16;
+            camera.position.set(0, 6, 9);
+            camera.lookAt(0, 0, 0);
         }
 
-        // دالة بناء صاروخ واقعي جداً ومفصل برمجياً
-        function createRealisticRocket(colorHex) {
-            let group = new THREE.Group();
+        function init3DButcherTable() {
+            // 1. طاولة التقطيع الخشبية للجزار
+            let tableGeo = new THREE.BoxGeometry(7, 0.8, 4);
+            let tableMat = new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 0.6 }); // لون خشبي دافئ
+            tableMesh = new THREE.Mesh(tableGeo, tableMat);
+            tableMesh.position.y = -0.4;
+            scene.add(tableMesh);
 
-            // 1. جسم الصاروخ الرئيسي الاسطواني المعدني
-            let bodyGeo = new THREE.CylinderGeometry(0.8, 0.9, 4, 16);
-            let bodyMat = new THREE.MeshStandardMaterial({ color: colorHex, metalness: 0.7, roughness: 0.2 });
-            let body = new THREE.Mesh(bodyGeo, bodyMat);
-            group.add(body);
+            // 2. نصل السكين الفولاذي الحاد المعلق أعلى اللحم
+            let knifeGeo = new THREE.BoxGeometry(4, 0.4, 0.1);
+            let knifeMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, metalness: 0.9, roughness: 0.1 });
+            knifeMesh = new THREE.Mesh(knifeGeo, knifeMat);
+            knifeMesh.position.set(0, 3, 0);
+            scene.add(knifeMesh);
 
-            // 2. قمة الرأس الانسيابية المدببة (المخروط)
-            let noseGeo = new THREE.ConeGeometry(0.8, 1.5, 16);
-            let noseMat = new THREE.MeshStandardMaterial({ color: 0xdd1111, metalness: 0.5 });
-            let nose = new THREE.Mesh(noseGeo, noseMat);
-            nose.position.y = 2.75;
-            group.add(nose);
-
-            // 3. المحرك السفلي النفاث (المصيدة العادمة)
-            let engineGeo = new THREE.CylinderGeometry(0.5, 0.7, 0.6, 12);
-            let engineMat = new THREE.MeshStandardMaterial({ color: 0x333333, metalness: 0.9 });
-            let engine = new THREE.Mesh(engineGeo, engineMat);
-            engine.position.y = -2.3;
-            group.add(engine);
-
-            // 4. الأجنحة الجانبية الدافعة للاستقرار (الزعانف الهوائية)
-            let finGeo = new THREE.BoxGeometry(1.5, 1, 0.1);
-            let finMat = new THREE.MeshStandardMaterial({ color: 0xdd1111 });
-            
-            let fin1 = new THREE.Mesh(finGeo, finMat); fin1.position.set(1.2, -1.5, 0); fin1.rotation.z = -0.3; group.add(fin1);
-            let fin2 = new THREE.Mesh(finGeo, finMat); fin2.position.set(-1.2, -1.5, 0); fin2.rotation.z = 0.3; group.add(fin2);
-
-            return group;
+            resetMeatMesh();
         }
 
-        function init3DScene() {
-            scene.remove(menuMesh);
+        function resetMeatMesh() {
+            if(meatMesh) scene.remove(meatMesh);
 
-            // صاروخك الواقعي
-            myShip = createRealisticRocket(0x00ffff);
-            myShip.position.set(-3, -6, 0);
-            scene.add(myShip);
+            // إنشاء الذبيحة/اللحم بشكل اسطواني (محاكاة قطعة اللحم الطازجة اللطيفة)
+            let meatGeo = new THREE.CylinderGeometry(0.8, 0.8, 4, 24);
+            let meatMat = new THREE.MeshStandardMaterial({ color: 0xb32424, roughness: 0.4 }); // لون اللحم الأحمر الطازج
+            meatMesh = new THREE.Mesh(meatGeo, meatMat);
+            meatMesh.rotation.z = Math.PI / 2; // وضعها بشكل أفقي على الطاولة
+            meatMesh.position.set(0, 0.6, 0);
+            scene.add(meatMesh);
 
-            // صاروخ اللاعب الحقيقي الآخر
-            opponentShip = createRealisticRocket(0xffaa00);
-            opponentShip.position.set(3, -6, 0);
-            scene.add(opponentShip);
+            if(knifeMesh) knifeMesh.position.set(THREE.MathUtils.randFloatSpread(2.2), 3, 0); // وضع السكين في مكان عشوائي فوق اللحم لزيادة التحدي لللاعب
+        }
 
-            // براميل بنزين واقعية
-            fuelTanks.forEach(f => scene.remove(f));
-            fuelTanks = [];
-            for(let i=0; i<15; i++) {
-                let fTank = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 1.2, 12), new THREE.MeshStandardMaterial({ color: 0x00ff00, metalness: 0.4 }));
-                fTank.position.set(THREE.MathUtils.randFloatSpread(18), THREE.MathUtils.randFloat(10, 250), THREE.MathUtils.randFloatSpread(1));
-                scene.add(fTank);
-                fuelTanks.push(fTank);
+        function executeMeatCut() {
+            if(isKnifeAnimating) return;
+            isKnifeAnimating = true;
+            knifeDirection = -1; // حركة لأسفل للقطع
+        }
+
+        function processCutPhysicsResult() {
+            // حساب فيزياء ومكان القطع بناءً على موقع السكين بالنسبة لقطعة اللحم الاسطوانية
+            let cutPositionX = knifeMesh.position.x;
+            let totalLength = 4;
+            let ratio = (cutPositionX + (totalLength/2)) / totalLength;
+            ratio = Math.max(0.05, Math.min(0.95, ratio)); // ضمان عدم الخروج عن الأطراف
+
+            // حساب وزن القطعة الناتجة (افترضنا أن الوزن الكلي الافتراضي للقطعة هو 350 جرام)
+            let totalMeatWeight = 350;
+            let cutWeight = Math.floor(totalMeatWeight * ratio);
+
+            document.getElementById('cutWeightText').innerText = cutWeight;
+
+            // حساب فارق الدقة ومدى رضا الزبون وإعطاء الكاش
+            let accuracyDiff = Math.abs(cutWeight - currentTargetWeight);
+            let earned = 0;
+
+            if(accuracyDiff <= 15) {
+                earned = 100;
+                alert(`🎯 أسطوري! جزار محترف وممتاز. الوزن دقيق جداً! كسبت ${earned}$`);
+            } else if(accuracyDiff <= 45) {
+                earned = 45;
+                alert(`👍 جيد جداً! القطعة قريبة من طلب الزبون. كسبت ${earned}$`);
+            } else {
+                earned = 10;
+                alert(`⚠️ العميل غير راضي تماماً، الفارق بالوزن كبير! كسبت ${earned}$ فقط.`);
             }
 
-            myTelemetry.fuel = 1000;
-            camera.position.set(0, -2, 14);
+            myMoney += earned;
+            document.getElementById('hudMoney').innerText = myMoney;
+
+            // تغيير حجم شكل اللحم ثلاثي الأبعاد برمجياً ليوحي بالانقسام الفعلي
+            meatMesh.scale.y = ratio;
+            meatMesh.position.x = - (totalLength / 2) + (totalLength * ratio / 2);
+
+            // تفعيل أزرار الانتقال للزبون التالي
+            document.getElementById('cutBtn').style.display = "none";
+            document.getElementById('nextBtn').style.display = "block";
         }
 
-        // إدارة المدخلات
-        window.addEventListener('keydown', (e) => {
-            if(appState !== "playing") return;
-            if(e.code === "ArrowLeft") controls.left = true;
-            if(e.code === "ArrowRight") controls.right = true;
-            if(e.code === "Space") controls.thrust = true;
-        });
-        window.addEventListener('keyup', (e) => {
-            if(appState !== "playing") return;
-            if(e.code === "ArrowLeft") controls.left = false;
-            if(e.code === "ArrowRight") controls.right = false;
-            if(e.code === "Space") controls.thrust = false;
-        });
-
-        document.getElementById('leftBtn').addEventListener('touchstart', (e) => { e.preventDefault(); controls.left = true; });
-        document.getElementById('leftBtn').addEventListener('touchend', () => controls.left = false);
-        document.getElementById('rightBtn').addEventListener('touchstart', (e) => { e.preventDefault(); controls.right = true; });
-        document.getElementById('rightBtn').addEventListener('touchend', () => controls.right = false);
-        document.getElementById('thrustBtn').addEventListener('touchstart', (e) => { e.preventDefault(); controls.thrust = true; });
-        document.getElementById('thrustBtn').addEventListener('touchend', () => controls.thrust = false);
-
-        // حلقة الرسم والتحديث المستمر
+        // --- حلقة التحديث والرسم المستمر الـ Loop ---
         function renderLoop() {
             requestAnimationFrame(renderLoop);
-            starField.rotation.y += 0.0004;
 
-            if (appState === "menu") {
-                menuMesh.position.y += 0.15;
-                menuMesh.rotation.y += 0.03;
-                if(menuMesh.position.y > 20) menuMesh.position.y = -15;
-            } 
-            else if (appState === "playing") {
-                if (controls.left) myShip.position.x -= 0.18;
-                if (controls.right) myShip.position.x += 0.18;
-
-                if (controls.thrust && myTelemetry.fuel > 0) {
-                    myShip.position.y += 0.25;
-                    myTelemetry.fuel -= 2;
-
-                    // توليد جزيئات نار وعادم حقيقية أسفل المحرك
-                    let p = new THREE.Mesh(new THREE.SphereGeometry(0.2, 4, 4), new THREE.MeshBasicMaterial({ color: 0xff4500 }));
-                    p.position.set(myShip.position.x, myShip.position.y - 2.5, myShip.position.z);
-                    scene.add(p);
-                    fireParticles.push(p);
-                } else {
-                    if(myShip.position.y > -6) myShip.position.y -= 0.08;
-                }
-
-                // تحديث جزيئات النيران المتساقطة للتلاشي
-                fireParticles.forEach((p, idx) => {
-                    p.position.y -= 0.15;
-                    p.scale.multiplyScalar(0.92);
-                    if(p.scale.x < 0.1) { scene.remove(p); fireParticles.splice(idx, 1); }
-                });
-
-                camera.position.y = myShip.position.y + 3;
-                myTelemetry.altitude = Math.max(0, Math.floor((myShip.position.y + 6) * 12));
-
-                // مزامنة موقع وحركة الصاروخ للاعب الحقيقي الآخر فورياً عبر الشبكة
-                opponentShip.position.x = opponentNetData.x;
-                opponentShip.position.y = opponentNetData.y;
-
-                // التفاعل مع علب البنزين
-                fuelTanks.forEach((f, idx) => {
-                    f.rotation.y += 0.03;
-                    if(myShip.position.distanceTo(f.position) < 1.8) {
-                        scene.remove(f); fuelTanks.splice(idx, 1);
-                        myTelemetry.fuel = Math.min(myTelemetry.maxFuel, myTelemetry.fuel + 350);
+            // حركة أنيميشن السكين ونزوله لقطع الذبيحة لأسفل
+            if(isKnifeAnimating) {
+                if(knifeDirection === -1) {
+                    knifeMesh.position.y -= 0.25;
+                    if(knifeMesh.position.y <= 0.6) {
+                        knifeDirection = 1; // الارتداد لأعلى بعد ملامسة اللحم والقطع
+                        processCutPhysicsResult();
                     }
-                });
-
-                // تحديث الأرقام والنسب الحية على واجهة الـ HUD
-                document.getElementById('myFuel').innerText = Math.max(0, Math.floor((myTelemetry.fuel / myTelemetry.maxFuel) * 100)) + "%";
-                document.getElementById('myAlt').innerText = myTelemetry.altitude;
-                document.getElementById('oppFuel').innerText = opponentNetData.fuel + "%";
-                document.getElementById('oppAlt').innerText = opponentNetData.altitude;
-
-                // شروط الفوز بالسباق التنافسي الحقيقي
-                if(myTelemetry.altitude >= 2000) {
-                    alert("🎉 مبروك! لقد فزت بالسباق الحقيقي وجمعت بنزين أكثر من منافسك!");
-                    location.reload();
-                } else if(opponentNetData.altitude >= 2000) {
-                    alert("🏁 العضو الآخر جمع بنزين أسرع وسبقك إلى خط النهاية!");
-                    location.reload();
+                } else {
+                    knifeMesh.position.y += 0.15;
+                    if(knifeMesh.position.y >= 3) {
+                        knifeMesh.position.y = 3;
+                        isKnifeAnimating = false;
+                    }
+                }
+            } else {
+                // جعل السكين يتحرك ببطء يميناً ويساراً تلقائياً لخلق تحدي دقة التوقيت (Timing Challenge) لللاعب عند الكبس
+                if(appState === "playing") {
+                    knifeMesh.position.x += Math.sin(Date.now() * 0.003) * 0.04;
                 }
             }
 
             renderer.render(scene, camera);
         }
 
-        initCore();
+        // بدء تشغيل المحرك
+        initCoreEngine();
         renderLoop();
     </script>
 </body>
