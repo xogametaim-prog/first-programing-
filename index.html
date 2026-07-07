@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TRL Real Multiplayer Space Simulator</title>
+    <title>TRL Real P2P Multiplayer Space Simulator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/chr15m/bugout/bugout.min.js"></script>
     <style>
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            overflow: hidden; background-color: #010105;
+            overflow: hidden; background-color: #010103;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             user-select: none; -webkit-user-select: none; color: white;
         }
@@ -17,37 +18,36 @@
         .screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; justify-content: center;
-            align-items: center; z-index: 100; background-color: #03030a;
+            align-items: center; z-index: 100; background-color: #020207;
         }
         
-        /* شريط تحميل 10 ثوان */
         .loader-bar { width: 280px; height: 10px; background-color: #111; border-radius: 5px; overflow: hidden; margin-top: 20px; }
         .loader-progress { width: 0%; height: 100%; background: linear-gradient(90deg, #00ffff, #ff4500); }
 
         .menu-container {
-            background: rgba(5, 5, 20, 0.9); padding: 30px; border-radius: 25px;
-            border: 1px solid rgba(0, 255, 255, 0.2); text-align: center;
-            box-shadow: 0 0 35px rgba(0, 255, 255, 0.2); z-index: 102; backdrop-filter: blur(8px);
+            background: rgba(4, 4, 15, 0.93); padding: 30px; border-radius: 25px;
+            border: 1px solid rgba(0, 255, 255, 0.25); text-align: center;
+            box-shadow: 0 0 35px rgba(0, 255, 255, 0.3); z-index: 102; backdrop-filter: blur(10px);
             width: 85%; max-width: 320px;
         }
         .menu-btn {
             width: 100%; padding: 12px; margin: 8px 0; font-size: 15px;
-            background-color: rgba(255,255,255,0.03); color: white; border: 1px solid #444;
+            background-color: rgba(255,255,255,0.04); color: white; border: 1px solid #444;
             border-radius: 25px; cursor: pointer; font-weight: bold; transition: 0.3s;
         }
-        .menu-btn:hover { background: #00ffff; color: black; border-color: #00ffff; }
+        .menu-btn:hover { background: #00ffff; color: black; border-color: #00ffff; box-shadow: 0 0 15px #00ffff; }
         #startBtn { background: #ff4500; border-color: #ff4500; }
 
-        /* واجهة رومات الملاحة والأونلاين */
         .input-field {
-            width: 90%; padding: 10px; margin: 10px 0; border-radius: 15px;
-            border: 1px solid #444; background: #111; color: white; text-align: center; font-size: 16px;
+            width: 90%; padding: 11px; margin: 10px 0; border-radius: 15px;
+            border: 1px solid #555; background: #0c0c14; color: white; text-align: center; font-size: 16px;
         }
 
         #hud-container {
             position: absolute; top: 15px; left: 15px; z-index: 10;
-            background: rgba(0,0,0,0.75); padding: 15px; border-radius: 15px;
-            border: 1px solid #333; font-size: 13px; line-height: 1.6; pointer-events: none;
+            background: rgba(2,2,8,0.85); padding: 15px; border-radius: 15px;
+            border: 1px solid #00ffff; font-size: 13px; line-height: 1.6; pointer-events: none;
+            box-shadow: 0 0 15px rgba(0,255,255,0.1);
         }
         
         #mobile-controls {
@@ -60,7 +60,8 @@
             border: 2px solid rgba(255,255,255,0.3); border-radius: 50%;
             color: white; font-size: 24px; display: flex; justify-content: center; align-items: center;
         }
-        #thrustBtn { background: rgba(255, 69, 0, 0.3); border-color: #ff4500; width: 80px; height: 80px; }
+        #thrustBtn { background: rgba(255, 69, 0, 0.4); border-color: #ff4500; width: 80px; height: 80px; }
+        #netStatus { font-size: 12px; color: #ff3333; margin-top: 5px; font-weight: bold;}
     </style>
 </head>
 <body>
@@ -68,38 +69,39 @@
     <div id="webgl-container"></div>
 
     <div id="loadingScreen" class="screen" style="z-index: 150;">
-        <h2 id="loadTitle">جاري تحميل بروتوكولات الأونلاين TRL...</h2>
+        <h2>تجهيز محرك الـ P2P الحقيقي...</h2>
         <div class="loader-bar"><div class="loader-progress" id="progress"></div></div>
         <p id="loadingText" style="color: #666; margin-top: 10px;">0%</p>
     </div>
 
     <div id="mainMenuScreen" class="screen" style="display:none; background: transparent; z-index: 100;">
         <div class="menu-container">
-            <h1 style="margin: 0 0 10px 0; font-size: 26px; color: #00ffff;">TRL MULTIPLAYER</h1>
-            <p style="margin: 0 0 20px 0; font-size: 11px; color: #aaa;">سباق البنزين الحقيقي والمباشر 🚀</p>
-            <button class="menu-btn" id="startBtn" onclick="openMultiplayerMenu()">MULTIPLAYER (رومات)</button>
-            <button class="menu-btn" onclick="alert('TRL TEAM Development © 2026')">DEVELOPER TEAM</button>
+            <h1 style="margin: 0 0 5px 0; font-size: 26px; color: #00ffff; letter-spacing: 1px;">TRL P2P NET</h1>
+            <p style="margin: 0 0 20px 0; font-size: 11px; color: #888;">سباق بنزين ومزامنة لاعبين حقيقية 🌐</p>
+            <button class="menu-btn" id="startBtn" onclick="openMultiplayerMenu()">MULTIPLAYER (رومات حقيقية)</button>
+            <button class="menu-btn" onclick="alert('TRL TEAM - Real WebRTC Engine 2026')">DEVELOPER TEAM</button>
         </div>
     </div>
 
-    <div id="multiplayerScreen" class="screen" style="display:none; background: rgba(3,3,12,0.95); z-index: 105;">
+    <div id="multiplayerScreen" class="screen" style="display:none; background: rgba(2,2,7,0.96); z-index: 105;">
         <div class="menu-container">
-            <h2 style="margin-top:0; color:#00ffff;">غرف الملاحة المشتركة</h2>
-            <input type="text" id="roomPassword" class="input-field" placeholder="أدخل كلمة سر الروم...">
-            <button class="menu-btn" style="background:#00ff00; color:black; border:none;" onclick="handleRoomAction('create')">➕ إنشاء روم جديد</button>
-            <button class="menu-btn" style="background:#ffcc00; color:black; border:none;" onclick="handleRoomAction('join')">⚡ دخول الروم الحالي</button>
-            <button class="menu-btn" onclick="backToMenu()">🔙 العودة للمنيو</button>
+            <h2 style="margin-top:0; color:#00ffff;">شبكة الغرف الحية</h2>
+            <p style="font-size:11px; color:#aaa; margin:0;">اكتب نفس كلمة السر لتتصل فوراً بجهاز صديقك</p>
+            <input type="text" id="roomPassword" class="input-field" placeholder="رقم أو كلمة سر الغرفة...">
+            <button class="menu-btn" style="background:#00ff00; color:black; border:none;" onclick="connectToP2PRoom()">⚡ اتصال وبدء المزامنة</button>
+            <button class="menu-btn" onclick="backToMenu()">🔙 عودة</button>
         </div>
     </div>
 
     <div id="hud-container" style="display: none;">
-        <div style="color: #00ffff; font-weight: bold;">🔑 Room Pass: <span id="hudRoom">None</span></div>
+        <div style="color: #00ffff; font-weight: bold;">🔑 الغرفة: <span id="hudRoom">None</span></div>
+        <div id="netStatus">⏳ جاري البحث عن لاعبين بالروم...</div>
         <hr style="border-color: #222;">
-        <div style="color:#fff;"><b>🚀 مركبتك (أنت):</b></div>
-        <div>الوقود: <span id="myFuel">100%</span> | الارتفاع: <span id="myAlt">0</span>m</div>
+        <div style="color:#00ffff;"><b>🚀 مركبتك الفضائية:</b></div>
+        <div>بنزين: <span id="myFuel">100%</span> | ارتفاع: <span id="myAlt">0</span>m</div>
         <br>
-        <div style="color:#ff4500;"><b>🛸 المنافس (أونلاين):</b></div>
-        <div>الوقود: <span id="oppFuel">100%</span> | الارتفاع: <span id="oppAlt">0</span>m</div>
+        <div style="color:#ff4500;"><b>🛸 اللاعب الآخر (حقيقي):</b></div>
+        <div>بنزين: <span id="oppFuel">100%</span> | ارتفاع: <span id="oppAlt">0</span>m</div>
     </div>
 
     <div id="mobile-controls">
@@ -111,20 +113,18 @@
     </div>
 
     <script>
-        // --- إدارة شاشة التحميل (10 ثوانٍ) ---
         let progress = 0;
         const loadTimer = setInterval(() => {
-            progress += 1;
+            progress += 2;
             if(progress >= 100) {
                 clearInterval(loadTimer);
                 document.getElementById('loadingScreen').style.display = 'none';
                 document.getElementById('mainMenuScreen').style.display = 'flex';
                 appState = "menu";
-            } else {
-                document.getElementById('loadingText').innerText = progress + "%";
             }
+            document.getElementById('loadingText').innerText = progress + "%";
             document.getElementById('progress').style.width = progress + "%";
-        }, 100);
+        }, 50);
 
         function openMultiplayerMenu() {
             document.getElementById('mainMenuScreen').style.display = 'none';
@@ -135,43 +135,58 @@
             document.getElementById('mainMenuScreen').style.display = 'flex';
         }
 
-        // --- محرك الشبكة والمحاكاة الحقيقية لـ Multiplayer ---
-        let roomCode = "";
-        let isHost = false;
-        let opponentData = { x: 5, y: -8, fuel: 100, altitude: 0, lastUpdate: 0 };
+        // --- محرك الشبكة الحقيقي (WebRTC P2P Real MultiPlayer) ---
+        let bgt = null;
+        let peerConnected = false;
+        let opponentNetData = { x: 4, y: -8, fuel: 100, altitude: 0 };
 
-        function handleRoomAction(type) {
-            let pass = document.getElementById('roomPassword').value.trim();
-            if(!pass) { alert("الرجاء كتابة كلمة السر أولاً!"); return; }
-            roomCode = pass;
-            isHost = (type === 'create');
-            
+        function connectToP2PRoom() {
+            let roomPass = document.getElementById('roomPassword').value.trim();
+            if(!roomPass) { alert("من فضلك اكتب كلمة سر الروم!"); return; }
+
             document.getElementById('multiplayerScreen').style.display = 'none';
             document.getElementById('hud-container').style.display = 'block';
             if(window.innerWidth < 900) document.getElementById('mobile-controls').style.display = 'flex';
-            
-            document.getElementById('hudRoom').innerText = roomCode;
-            appState = "playing";
-            init3DGame();
+            document.getElementById('hudRoom').innerText = roomPass;
 
-            // بدء محاكاة حركة الخصم الحقيقية (Real-time Simulation Loop)
-            setInterval(() => {
-                if(appState === "playing") {
-                    opponentData.x += (Math.random() * 0.4 - 0.2);
-                    if(opponentData.fuel > 0) {
-                        opponentData.y += 0.24;
-                        opponentData.fuel -= 0.4;
-                    } else {
-                        opponentData.y -= 0.08;
-                    }
-                    opponentData.altitude = Math.max(0, Math.floor((opponentData.y + 8) * 12));
+            appState = "playing";
+            init3DScene();
+
+            // ربط القناة اللاسلكية المشفرة بين الأجهزة بناءً على الباسورد
+            bgt = new Bugout("trl-space-room-" + roomPass);
+
+            bgt.on("seen", (address) => {
+                peerConnected = true;
+                document.getElementById("netStatus").innerText = "● تم اتصال اللاعب الآخر بنجاح! 🟢";
+                document.getElementById("netStatus").style.color = "#00ff00";
+            });
+
+            bgt.on("message", (address, data) => {
+                if (data && data.type === "sync") {
+                    opponentNetData.x = data.x;
+                    opponentNetData.y = data.y;
+                    opponentNetData.fuel = data.fuel;
+                    opponentNetData.altitude = data.alt;
                 }
-            }, 50);
+            });
+
+            // إرسال إحداثياتك الحالية وجزيئات البنزين لصديقك كل 45 ملي ثانية
+            setInterval(() => {
+                if(appState === "playing" && bgt) {
+                    bgt.send({
+                        type: "sync",
+                        x: myShip.position.x,
+                        y: myShip.position.y,
+                        fuel: Math.floor((myTelemetry.fuel / myTelemetry.maxFuel) * 100),
+                        alt: myTelemetry.altitude
+                    });
+                }
+            }, 45);
         }
 
-        // --- بناء جرافيكس الفضاء ثلاثي الأبعاد (Three.js WebGL Engine) ---
+        // --- محرك الرسومات ثلاثي الأبعاد المتقدم والواقعي (Three.js Engine) ---
         let scene, camera, renderer, starField, menuMesh;
-        let myShip, opponentShip, fuelCanisters = [];
+        let myShip, opponentShip, fuelTanks = [], fireParticles = [];
         let appState = "loading";
         let controls = { left: false, right: false, thrust: false };
         let myTelemetry = { fuel: 1000, maxFuel: 1000, altitude: 0 };
@@ -183,55 +198,84 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             document.getElementById('webgl-container').appendChild(renderer.domElement);
 
-            let ambient = new THREE.AmbientLight(0x555555); scene.add(ambient);
-            let sun = new THREE.DirectionalLight(0xffffff, 1); sun.position.set(5, 10, 7); scene.add(sun);
+            scene.add(new THREE.AmbientLight(0x666666));
+            let light = new THREE.DirectionalLight(0xffffff, 1.2); light.position.set(5, 15, 10); scene.add(light);
 
-            // النجوم اللامعة
             let starGeo = new THREE.BufferGeometry();
             let starPos = [];
-            for(let i=0; i<1000; i++) {
-                starPos.push(THREE.MathUtils.randFloatSpread(300), THREE.MathUtils.randFloatSpread(300), THREE.MathUtils.randFloatSpread(300));
-            }
+            for(let i=0; i<1200; i++) starPos.push(THREE.MathUtils.randFloatSpread(400), THREE.MathUtils.randFloatSpread(400), THREE.MathUtils.randFloatSpread(400));
             starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPos, 3));
-            starField = new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.6 }));
+            starField = new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.5 }));
             scene.add(starField);
 
-            // الصاروخ الخلفي المضيء في المنيو
-            menuMesh = new THREE.Mesh(new THREE.ConeGeometry(1.5, 5, 4), new THREE.MeshBasicMaterial({ color: 0x00ffff, wireframe: true }));
-            menuMesh.position.set(0, -20, -25);
+            menuMesh = new THREE.Mesh(new THREE.ConeGeometry(1, 4, 5), new THREE.MeshBasicMaterial({ color: 0x00ffff, wireframe: true }));
+            menuMesh.position.set(0, -15, -20);
             scene.add(menuMesh);
-            camera.position.z = 20;
+            camera.position.z = 16;
         }
 
-        function init3DGame() {
+        // دالة بناء صاروخ واقعي جداً ومفصل برمجياً
+        function createRealisticRocket(colorHex) {
+            let group = new THREE.Group();
+
+            // 1. جسم الصاروخ الرئيسي الاسطواني المعدني
+            let bodyGeo = new THREE.CylinderGeometry(0.8, 0.9, 4, 16);
+            let bodyMat = new THREE.MeshStandardMaterial({ color: colorHex, metalness: 0.7, roughness: 0.2 });
+            let body = new THREE.Mesh(bodyGeo, bodyMat);
+            group.add(body);
+
+            // 2. قمة الرأس الانسيابية المدببة (المخروط)
+            let noseGeo = new THREE.ConeGeometry(0.8, 1.5, 16);
+            let noseMat = new THREE.MeshStandardMaterial({ color: 0xdd1111, metalness: 0.5 });
+            let nose = new THREE.Mesh(noseGeo, noseMat);
+            nose.position.y = 2.75;
+            group.add(nose);
+
+            // 3. المحرك السفلي النفاث (المصيدة العادمة)
+            let engineGeo = new THREE.CylinderGeometry(0.5, 0.7, 0.6, 12);
+            let engineMat = new THREE.MeshStandardMaterial({ color: 0x333333, metalness: 0.9 });
+            let engine = new THREE.Mesh(engineGeo, engineMat);
+            engine.position.y = -2.3;
+            group.add(engine);
+
+            // 4. الأجنحة الجانبية الدافعة للاستقرار (الزعانف الهوائية)
+            let finGeo = new THREE.BoxGeometry(1.5, 1, 0.1);
+            let finMat = new THREE.MeshStandardMaterial({ color: 0xdd1111 });
+            
+            let fin1 = new THREE.Mesh(finGeo, finMat); fin1.position.set(1.2, -1.5, 0); fin1.rotation.z = -0.3; group.add(fin1);
+            let fin2 = new THREE.Mesh(finGeo, finMat); fin2.position.set(-1.2, -1.5, 0); fin2.rotation.z = 0.3; group.add(fin2);
+
+            return group;
+        }
+
+        function init3DScene() {
             scene.remove(menuMesh);
 
-            // 1. إنشاء صاروخك الخاص (باللون الأزرق النيون)
-            myShip = new THREE.Mesh(new THREE.CylinderGeometry(0, 1, 4, 8), new THREE.MeshStandardMaterial({ color: 0x00ffff }));
-            myShip.position.set(isHost ? -4 : 4, -8, 0);
+            // صاروخك الواقعي
+            myShip = createRealisticRocket(0x00ffff);
+            myShip.position.set(-3, -6, 0);
             scene.add(myShip);
 
-            // 2. إنشاء صاروخ المنافس المباشر (باللون الأحمر الناري للتمييز)
-            opponentShip = new THREE.Mesh(new THREE.CylinderGeometry(0, 1, 4, 8), new THREE.MeshStandardMaterial({ color: 0xff4500 }));
-            opponentShip.position.set(isHost ? 4 : -4, -8, 0);
+            // صاروخ اللاعب الحقيقي الآخر
+            opponentShip = createRealisticRocket(0xffaa00);
+            opponentShip.position.set(3, -6, 0);
             scene.add(opponentShip);
 
-            // 3. توزيع براميل البنزين الطائرة لتغذية السباق التنافسي
-            fuelCanisters.forEach(f => scene.remove(f));
-            fuelCanisters = [];
+            // براميل بنزين واقعية
+            fuelTanks.forEach(f => scene.remove(f));
+            fuelTanks = [];
             for(let i=0; i<15; i++) {
-                let fuel = new THREE.Mesh(new THREE.BoxGeometry(1, 1.3, 1), new THREE.MeshStandardMaterial({ color: 0x00ff00, roughness: 0.2 }));
-                fuel.position.set(THREE.MathUtils.randFloatSpread(20), THREE.MathUtils.randFloat(10, 200), THREE.MathUtils.randFloatSpread(2));
-                scene.add(fuel);
-                fuelCanisters.push(fuel);
+                let fTank = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 1.2, 12), new THREE.MeshStandardMaterial({ color: 0x00ff00, metalness: 0.4 }));
+                fTank.position.set(THREE.MathUtils.randFloatSpread(18), THREE.MathUtils.randFloat(10, 250), THREE.MathUtils.randFloatSpread(1));
+                scene.add(fTank);
+                fuelTanks.push(fTank);
             }
 
             myTelemetry.fuel = 1000;
-            myTelemetry.altitude = 0;
-            camera.position.set(0, -4, 15);
+            camera.position.set(0, -2, 14);
         }
 
-        // المستشعرات والتحكم اللمسي للـ Acode
+        // إدارة المدخلات
         window.addEventListener('keydown', (e) => {
             if(appState !== "playing") return;
             if(e.code === "ArrowLeft") controls.left = true;
@@ -252,58 +296,68 @@
         document.getElementById('thrustBtn').addEventListener('touchstart', (e) => { e.preventDefault(); controls.thrust = true; });
         document.getElementById('thrustBtn').addEventListener('touchend', () => controls.thrust = false);
 
-        // حلقة الحركة والتحديث الرئيسية
+        // حلقة الرسم والتحديث المستمر
         function renderLoop() {
             requestAnimationFrame(renderLoop);
-            starField.rotation.y += 0.0005;
+            starField.rotation.y += 0.0004;
 
             if (appState === "menu") {
-                menuMesh.position.y += 0.2;
-                menuMesh.rotation.y += 0.02;
-                if(menuMesh.position.y > 25) menuMesh.position.y = -20;
+                menuMesh.position.y += 0.15;
+                menuMesh.rotation.y += 0.03;
+                if(menuMesh.position.y > 20) menuMesh.position.y = -15;
             } 
             else if (appState === "playing") {
-                if (controls.left) myShip.position.x -= 0.2;
-                if (controls.right) myShip.position.x += 0.2;
+                if (controls.left) myShip.position.x -= 0.18;
+                if (controls.right) myShip.position.x += 0.18;
 
                 if (controls.thrust && myTelemetry.fuel > 0) {
                     myShip.position.y += 0.25;
-                    myTelemetry.fuel -= 2.5;
+                    myTelemetry.fuel -= 2;
+
+                    // توليد جزيئات نار وعادم حقيقية أسفل المحرك
+                    let p = new THREE.Mesh(new THREE.SphereGeometry(0.2, 4, 4), new THREE.MeshBasicMaterial({ color: 0xff4500 }));
+                    p.position.set(myShip.position.x, myShip.position.y - 2.5, myShip.position.z);
+                    scene.add(p);
+                    fireParticles.push(p);
                 } else {
-                    if(myShip.position.y > -8) myShip.position.y -= 0.09;
+                    if(myShip.position.y > -6) myShip.position.y -= 0.08;
                 }
 
-                camera.position.y = myShip.position.y + 4;
-                myTelemetry.altitude = Math.max(0, Math.floor((myShip.position.y + 8) * 12));
+                // تحديث جزيئات النيران المتساقطة للتلاشي
+                fireParticles.forEach((p, idx) => {
+                    p.position.y -= 0.15;
+                    p.scale.multiplyScalar(0.92);
+                    if(p.scale.x < 0.1) { scene.remove(p); fireParticles.splice(idx, 1); }
+                });
 
-                opponentShip.position.x = opponentData.x;
-                opponentShip.position.y = opponentData.y;
+                camera.position.y = myShip.position.y + 3;
+                myTelemetry.altitude = Math.max(0, Math.floor((myShip.position.y + 6) * 12));
 
-                fuelCanisters.forEach((f, idx) => {
-                    f.rotation.y += 0.02;
-                    
-                    if(myShip.position.distanceTo(f.position) < 2) {
-                        scene.remove(f);
-                        fuelCanisters.splice(idx, 1);
+                // مزامنة موقع وحركة الصاروخ للاعب الحقيقي الآخر فورياً عبر الشبكة
+                opponentShip.position.x = opponentNetData.x;
+                opponentShip.position.y = opponentNetData.y;
+
+                // التفاعل مع علب البنزين
+                fuelTanks.forEach((f, idx) => {
+                    f.rotation.y += 0.03;
+                    if(myShip.position.distanceTo(f.position) < 1.8) {
+                        scene.remove(f); fuelTanks.splice(idx, 1);
                         myTelemetry.fuel = Math.min(myTelemetry.maxFuel, myTelemetry.fuel + 350);
-                    }
-                    else if(opponentShip.position.distanceTo(f.position) < 2) {
-                        scene.remove(f);
-                        fuelCanisters.splice(idx, 1);
-                        opponentData.fuel = Math.min(100, opponentData.fuel + 35);
                     }
                 });
 
-                document.getElementById('myFuel').innerText = Math.max(0, Math.floor((myTelemetry.fuel/myTelemetry.maxFuel)*100)) + "%";
+                // تحديث الأرقام والنسب الحية على واجهة الـ HUD
+                document.getElementById('myFuel').innerText = Math.max(0, Math.floor((myTelemetry.fuel / myTelemetry.maxFuel) * 100)) + "%";
                 document.getElementById('myAlt').innerText = myTelemetry.altitude;
-                document.getElementById('oppFuel').innerText = Math.max(0, Math.floor(opponentData.fuel)) + "%";
-                document.getElementById('oppAlt').innerText = opponentData.altitude;
+                document.getElementById('oppFuel').innerText = opponentNetData.fuel + "%";
+                document.getElementById('oppAlt').innerText = opponentNetData.altitude;
 
-                if(myTelemetry.altitude >= 1800) {
-                    alert("🎉 كفو! لقد فزت بالسباق وجمعت بنزين أكثر من الخصم!");
+                // شروط الفوز بالسباق التنافسي الحقيقي
+                if(myTelemetry.altitude >= 2000) {
+                    alert("🎉 مبروك! لقد فزت بالسباق الحقيقي وجمعت بنزين أكثر من منافسك!");
                     location.reload();
-                } else if(opponentData.altitude >= 1800) {
-                    alert("🛸 المنافس أخذ وقود أكثر وسبقك لخط النهاية! حاول مجدداً.");
+                } else if(opponentNetData.altitude >= 2000) {
+                    alert("🏁 العضو الآخر جمع بنزين أسرع وسبقك إلى خط النهاية!");
                     location.reload();
                 }
             }
