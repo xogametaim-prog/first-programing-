@@ -1,0 +1,1707 @@
+# ULTIMATE DISCORD TICKET MANAGEMENT PLATFORM
+
+## PROJECT OVERVIEW
+
+I want to build a professional Discord Ticket Management Platform, not just a normal Discord ticket bot.
+
+This project should feel like a premium commercial SaaS application that could be sold to thousands of Discord communities.
+
+The platform consists of two connected parts:
+
+1. A Discord Bot.
+2. A Professional Web Dashboard.
+
+Both must work together in real time.
+
+Every action performed in Discord must instantly appear in the Dashboard.
+
+Every change made in the Dashboard must instantly update the Discord bot without restarting it.
+
+The entire system should support multiple Discord servers (Multi-Guild Support).
+
+Every Discord server must have completely independent settings, ticket panels, permissions, statistics, logs, forms, staff, and configurations.
+
+The platform must automatically detect every server the bot joins.
+
+After logging in through Discord OAuth2, users should only see servers where they have the "Manage Server" permission.
+
+Every server should have its own separate workspace.
+
+---
+
+# LOGIN SYSTEM
+
+Users log in using Discord OAuth2.
+
+No manual account creation.
+
+No username/password system.
+
+The dashboard automatically retrieves:
+
+- Username
+- Display Name
+- Avatar
+- Banner
+- Discord ID
+- Badges
+- Joined Servers
+- Roles
+- Permissions
+
+Sessions should remain active even if the browser is closed.
+
+The user should not have to log in again every time.
+
+Include:
+
+- Remember Me
+- Secure Sessions
+- Logout Everywhere
+- Active Device List
+- Login History
+- Last Login Time
+- Last IP Address
+- Browser Information
+
+---
+
+# HOME PAGE
+
+The Home page should display live statistics.
+
+Cards include:
+
+• Total Servers
+
+• Total Members
+
+• Online Members
+
+• Open Tickets
+
+• Closed Tickets
+
+• Deleted Tickets
+
+• Archived Tickets
+
+• Average Response Time
+
+• Average Close Time
+
+• Tickets Today
+
+• Tickets This Week
+
+• Tickets This Month
+
+• Active Staff
+
+• Total Ticket Panels
+
+• Forms Created
+
+• Total Categories
+
+• Messages Processed
+
+• AI Requests
+
+• Bot Uptime
+
+• CPU Usage
+
+• RAM Usage
+
+• Database Size
+
+• API Latency
+
+Everything should refresh automatically without reloading the page.
+
+---
+
+# SIDEBAR
+
+The dashboard sidebar should contain:
+
+Dashboard
+
+Overview
+
+Analytics
+
+Tickets
+
+Panels
+
+Categories
+
+Departments
+
+Forms
+
+Embeds
+
+Buttons
+
+Channels
+
+Roles
+
+Permissions
+
+Staff
+
+Users
+
+Statistics
+
+Automation
+
+Notifications
+
+Logs
+
+Audit Logs
+
+Transcript
+
+Templates
+
+Themes
+
+Languages
+
+Security
+
+Integrations
+
+API
+
+Extensions
+
+Backups
+
+AI Assistant
+
+Settings
+
+Profile
+
+Support
+
+About
+
+---
+
+# SERVER MANAGEMENT
+
+The user can switch between Discord servers instantly.
+
+Each server stores:
+
+Completely different ticket panels.
+
+Different logs.
+
+Different colors.
+
+Different staff.
+
+Different forms.
+
+Different permissions.
+
+Different ticket settings.
+
+Different statistics.
+
+Different automation rules.
+
+No settings should overlap between servers.
+
+---
+
+# TICKET PANEL SYSTEM
+
+Users can create unlimited ticket panels.
+
+Each panel has:
+
+Panel Name
+
+Panel Description
+
+Panel Category
+
+Panel Color
+
+Embed Title
+
+Embed Description
+
+Footer
+
+Thumbnail
+
+Large Image
+
+Author
+
+Timestamp
+
+Buttons
+
+Dropdown Menus
+
+Custom Emojis
+
+Role Mentions
+
+Channel Selection
+
+Panel Visibility
+
+Panel Status
+
+Panel Icon
+
+Every panel can be enabled or disabled.
+
+Panels can be duplicated.
+
+Panels can be exported.
+
+Panels can be imported.
+
+Panels can be previewed before publishing.
+
+---
+
+# TICKET TYPES
+
+Unlimited ticket categories.
+
+Examples:
+
+Support
+
+Purchase
+
+Refund
+
+Partnership
+
+Application
+
+Bug Report
+
+Player Report
+
+User Report
+
+Discord Report
+
+Server Issue
+
+Technical Support
+
+Account Recovery
+
+Billing
+
+Question
+
+Appeal
+
+Suggestion
+
+Complaint
+
+Custom Category
+
+Every category has:
+
+Custom Color
+
+Custom Icon
+
+Custom Emoji
+
+Custom Staff Role
+
+Custom Logs
+
+Custom Forms
+
+Custom Welcome Message
+
+Custom Auto Reply
+
+Custom Close Message
+
+---
+
+# EMBED BUILDER
+
+The dashboard includes a complete visual Embed Builder.
+
+Supports:
+
+Title
+
+Description
+
+Fields
+
+Footer
+
+Footer Icon
+
+Author
+
+Author Icon
+
+Author URL
+
+Thumbnail
+
+Main Image
+
+Timestamp
+
+Color Picker
+
+Hyperlinks
+
+Markdown
+
+Preview
+
+Duplicate
+
+Templates
+
+Save
+
+Load
+
+Reset
+
+Undo
+
+Redo
+
+---
+
+# BUTTON BUILDER
+
+Every ticket panel supports unlimited buttons.
+
+Each button includes:
+
+Button Name
+
+Emoji
+
+Color
+
+Style
+
+Action
+
+Permissions
+
+Confirmation Dialog
+
+Visibility Rules
+
+Cooldown
+
+Enabled/Disabled
+
+Supported Button Styles:
+
+Primary
+
+Secondary
+
+Success
+
+Danger
+
+Link
+
+Custom Actions:
+
+Open Ticket
+
+Close Ticket
+
+Claim Ticket
+
+Transfer Ticket
+
+Archive Ticket
+
+Create Voice Channel
+
+Send DM
+
+Run Command
+
+Assign Role
+
+Remove Role
+
+Open Modal
+
+Custom JavaScript Action
+
+Webhook Trigger
+
+---
+
+# DROPDOWN MENUS
+
+Instead of buttons, ticket panels may also use dropdown menus.
+
+Each option has:
+
+Label
+
+Description
+
+Emoji
+
+Category
+
+Role
+
+Color
+
+Questions
+
+Priority
+
+Department
+
+Staff Group
+
+Unlimited dropdown options should be supported.
+
+---
+
+# TICKET CREATION
+
+When a user opens a ticket:
+
+A new private channel is created automatically.
+
+The channel name format can be customized.
+
+Examples:
+
+ticket-username
+
+support-username
+
+purchase-username
+
+refund-username
+
+bug-username
+
+report-username
+
+The dashboard should allow custom naming variables such as:
+
+{username}
+
+{userid}
+
+{ticket}
+
+{date}
+
+{category}
+
+{server}
+
+{department}
+
+Every ticket receives an automatic unique Ticket ID.
+# TICKET MANAGEMENT SYSTEM
+
+The ticket system should behave like an enterprise-level customer support platform.
+
+Every ticket must have its own unique identity and complete lifecycle.
+
+Each ticket stores:
+
+- Ticket ID
+- Ticket Number
+- Ticket Category
+- Ticket Status
+- Ticket Priority
+- Creator Information
+- Assigned Staff
+- Creation Date
+- Last Activity
+- Close Date
+- Archive Date
+- Response Time
+- Close Time
+- Transcript
+- Attachments
+- Internal Notes
+- Tags
+- Department
+- Rating
+- Ticket History
+
+Every change must automatically save to the database.
+
+---
+
+# TICKET STATUS
+
+Every ticket can have one of the following statuses:
+
+Open
+
+Waiting For Staff
+
+Waiting For User
+
+In Progress
+
+Claimed
+
+Pending
+
+Solved
+
+Closed
+
+Archived
+
+Deleted
+
+Spam
+
+Locked
+
+Hidden
+
+Transferred
+
+Merged
+
+Every status should have:
+
+Custom Color
+
+Custom Icon
+
+Custom Name
+
+Custom Description
+
+Automatic Actions
+
+---
+
+# TICKET PRIORITY
+
+Each ticket has a priority.
+
+Available priorities:
+
+Emergency
+
+Critical
+
+High
+
+Normal
+
+Low
+
+Information
+
+Every priority should have:
+
+Different Color
+
+Different Icon
+
+Different Notification Level
+
+Different Auto Rules
+
+Different Staff Assignment
+
+---
+
+# TICKET ACTIONS
+
+Every ticket supports:
+
+Open
+
+Close
+
+Reopen
+
+Delete
+
+Archive
+
+Restore
+
+Rename
+
+Move
+
+Merge
+
+Split
+
+Lock
+
+Unlock
+
+Pin
+
+Unpin
+
+Claim
+
+Unclaim
+
+Transfer
+
+Assign Staff
+
+Remove Staff
+
+Add User
+
+Remove User
+
+Create Thread
+
+Duplicate
+
+Favorite
+
+Star
+
+Mark Solved
+
+Escalate
+
+Download Transcript
+
+Export HTML
+
+Export PDF
+
+Export TXT
+
+Email Transcript
+
+Print Transcript
+
+Every action must appear instantly inside Discord and Dashboard.
+
+---
+
+# CLAIM SYSTEM
+
+When a staff member presses Claim:
+
+The ticket becomes assigned.
+
+Only one staff member may claim a ticket at a time.
+
+Dashboard displays:
+
+Assigned Staff
+
+Claim Time
+
+Response Time
+
+Current Status
+
+Other staff should immediately see that the ticket is claimed.
+
+The claimer may later:
+
+Unclaim
+
+Transfer
+
+Close
+
+Archive
+
+---
+
+# TRANSFER SYSTEM
+
+Transfer ticket between:
+
+Departments
+
+Staff Members
+
+Roles
+
+Categories
+
+Servers (optional)
+
+When transferred:
+
+History should be saved.
+
+Logs should be generated.
+
+Notifications should be sent.
+
+---
+
+# RENAME SYSTEM
+
+Staff can rename ticket channels.
+
+Dashboard stores:
+
+Old Name
+
+New Name
+
+Who Changed It
+
+Date
+
+Reason
+
+---
+
+# INTERNAL NOTES
+
+Staff members should have private notes invisible to the ticket creator.
+
+Support:
+
+Markdown
+
+Images
+
+Mentions
+
+Checklists
+
+Pinned Notes
+
+Editing
+
+Deleting
+
+Searching
+
+---
+
+# PRIVATE STAFF CHAT
+
+Each ticket has a hidden staff discussion area.
+
+Users cannot see it.
+
+Staff can discuss:
+
+Solutions
+
+Warnings
+
+Instructions
+
+Notes
+
+Escalations
+
+---
+
+# USER MANAGEMENT
+
+Staff may:
+
+Add User
+
+Remove User
+
+Mute User
+
+Lock User Access
+
+Restore Access
+
+Mention User
+
+View Profile
+
+Open User History
+
+View Previous Tickets
+
+Ban User From Tickets
+
+Blacklist User
+
+Whitelist User
+
+---
+
+# AUTO CLOSE
+
+Automatic closing rules.
+
+Examples:
+
+No reply for 24 hours.
+
+No staff response.
+
+Solved.
+
+Inactive ticket.
+
+Spam ticket.
+
+Auto reminders before closing.
+
+---
+
+# AUTO DELETE
+
+After closing:
+
+Delete after:
+
+1 hour
+
+6 hours
+
+12 hours
+
+1 day
+
+3 days
+
+7 days
+
+30 days
+
+Never
+
+---
+
+# TICKET FORMS
+
+Before opening a ticket, show a customizable form.
+
+Supported fields:
+
+Short Text
+
+Long Text
+
+Number
+
+Email
+
+Phone
+
+Date
+
+Time
+
+Dropdown
+
+Checkbox
+
+Radio Button
+
+Image Upload
+
+File Upload
+
+URL
+
+Password
+
+Custom Validation
+
+Required / Optional
+
+Unlimited questions.
+
+Conditional questions based on previous answers.
+
+---
+
+# FILE ATTACHMENTS
+
+Users can upload:
+
+Images
+
+Videos
+
+PDF
+
+ZIP
+
+Documents
+
+Audio
+
+Maximum size configurable.
+
+Preview inside dashboard.
+
+Download individually or all together.
+
+---
+
+# TRANSCRIPT SYSTEM
+
+Generate beautiful transcripts.
+
+Formats:
+
+HTML
+
+PDF
+
+TXT
+
+JSON
+
+Include:
+
+Messages
+
+Embeds
+
+Buttons
+
+Images
+
+Attachments
+
+Edits
+
+Deleted Messages
+
+Timestamps
+
+User Avatars
+
+Role Colors
+
+Export
+
+Download
+
+Print
+
+Email
+
+Automatically send transcript to Logs Channel.
+
+---
+
+# LOGGING SYSTEM
+
+Everything must be logged.
+
+Examples:
+
+Ticket Opened
+
+Ticket Closed
+
+Ticket Reopened
+
+Ticket Deleted
+
+Ticket Archived
+
+Ticket Restored
+
+Ticket Renamed
+
+Claim
+
+Unclaim
+
+Transfer
+
+User Added
+
+User Removed
+
+Role Changed
+
+Settings Changed
+
+Panel Created
+
+Panel Deleted
+
+Login
+
+Logout
+
+AI Changes
+
+Automation Events
+
+Errors
+
+Warnings
+
+Every log includes:
+
+Time
+
+Date
+
+User
+
+Staff
+
+Action
+
+Reason
+
+Channel
+
+Server
+
+IP (Dashboard)
+
+Device
+
+---
+
+# STAFF MANAGEMENT
+
+Dashboard displays:
+
+Staff Name
+
+Avatar
+
+Department
+
+Role
+
+Tickets Claimed
+
+Tickets Closed
+
+Average Response Time
+
+Average Close Time
+
+Rating
+
+Warnings
+
+Achievements
+
+Current Status
+
+Online Time
+
+Leaderboard
+
+---
+
+# STAFF PERMISSIONS
+
+Permissions can be customized individually.
+
+Examples:
+
+Open Tickets
+
+Close Tickets
+
+Delete Tickets
+
+Claim Tickets
+
+Transfer Tickets
+
+Archive Tickets
+
+Rename Tickets
+
+Manage Forms
+
+Manage Panels
+
+Manage Logs
+
+Manage AI
+
+Manage Dashboard
+
+Administrator
+
+---
+
+# TICKET TAGS
+
+Support unlimited tags.
+
+Examples:
+
+Urgent
+
+VIP
+
+Payment
+
+Bug
+
+Refund
+
+Developer
+
+Moderator
+
+Security
+
+Question
+
+Suggestion
+
+Tags are searchable and color coded.
+
+---
+
+# SEARCH SYSTEM
+
+Search by:
+
+Ticket ID
+
+Username
+
+Discord ID
+
+Email
+
+Phone
+
+Category
+
+Priority
+
+Status
+
+Date
+
+Staff
+
+Tags
+
+Keyword
+
+Message Content
+
+Transcript
+
+---
+
+# FILTER SYSTEM
+
+Filter tickets by:
+
+Open
+
+Closed
+
+Claimed
+
+Archived
+
+Deleted
+
+Today
+
+Yesterday
+
+This Week
+
+This Month
+
+Priority
+
+Department
+
+Assigned Staff
+
+Category
+
+Rating
+
+---
+
+# NOTIFICATION SYSTEM
+
+Real-time notifications inside Dashboard and Discord.
+
+Examples:
+
+New Ticket
+
+Staff Mention
+
+Transfer
+
+Close
+
+Rating Received
+
+Transcript Ready
+
+Backup Finished
+
+AI Completed Task
+
+Support:
+
+Desktop Notifications
+
+Browser Notifications
+
+Discord Notifications
+
+Webhook Notifications
+
+Email Notifications (optional)
+# AI ASSISTANT
+
+The dashboard must include a built-in AI Assistant.
+
+The AI is not responsible for programming the bot or editing source code directly. Instead, it serves as an intelligent helper that answers questions about the dashboard and guides administrators through every feature.
+
+The AI should understand all dashboard settings and explain them clearly.
+
+Examples:
+
+"What does Claim Ticket do?"
+
+"How can I create a new ticket panel?"
+
+"Why can't users open tickets?"
+
+"How do I change the support role?"
+
+"Where do transcripts get saved?"
+
+"What permissions are missing?"
+
+"How do I create a purchase ticket?"
+
+The AI should provide accurate explanations and step-by-step guidance.
+
+It should also suggest better settings and identify common configuration mistakes.
+
+---
+
+# ANALYTICS
+
+The dashboard should contain live analytics.
+
+Statistics include:
+
+Open Tickets
+
+Closed Tickets
+
+Archived Tickets
+
+Deleted Tickets
+
+Average Response Time
+
+Average Close Time
+
+Tickets Today
+
+Tickets This Week
+
+Tickets This Month
+
+Tickets This Year
+
+Most Active Staff
+
+Most Active Categories
+
+Peak Support Hours
+
+Average Rating
+
+Bot Latency
+
+CPU Usage
+
+RAM Usage
+
+Database Usage
+
+Storage Usage
+
+Charts should update automatically in real time.
+
+Support:
+
+Daily
+
+Weekly
+
+Monthly
+
+Yearly
+
+Custom Date Range
+
+Export PDF
+
+Export CSV
+
+Export PNG
+
+---
+
+# AUTOMATION
+
+Support automatic workflows.
+
+Examples:
+
+Auto Close
+
+Auto Delete
+
+Auto Archive
+
+Auto Reminder
+
+Auto Rename
+
+Auto Assign Staff
+
+Auto Notifications
+
+Automation rules may depend on:
+
+Category
+
+Department
+
+Priority
+
+Role
+
+Time
+
+Ticket Status
+
+Ticket Age
+
+---
+
+# BACKUP SYSTEM
+
+The dashboard should automatically create backups.
+
+Support:
+
+Automatic Backup
+
+Manual Backup
+
+Restore Backup
+
+Download Backup
+
+Backup History
+
+Backup Verification
+
+Automatic Scheduled Backups
+
+---
+
+# SECURITY
+
+Include professional security features.
+
+Discord OAuth2
+
+Permission Validation
+
+Secure Sessions
+
+Login History
+
+Device History
+
+Rate Limiting
+
+CSRF Protection
+
+Audit Logs
+
+Automatic Session Expiration
+
+Suspicious Activity Detection
+
+---
+
+# NOTIFICATIONS
+
+Support live notifications.
+
+Dashboard Notifications
+
+Discord Notifications
+
+Webhook Notifications
+
+Browser Notifications
+
+Examples:
+
+New Ticket
+
+Ticket Closed
+
+Ticket Claimed
+
+Transcript Generated
+
+Automation Triggered
+
+Backup Completed
+
+System Error
+
+---
+
+# MULTI SERVER SUPPORT
+
+Each Discord server must have completely separate data.
+
+Every server stores independently:
+
+Settings
+
+Panels
+
+Embeds
+
+Buttons
+
+Forms
+
+Roles
+
+Permissions
+
+Categories
+
+Departments
+
+Statistics
+
+Logs
+
+Automation Rules
+
+Backups
+
+Changing one server must never affect another server.
+
+---
+
+# AUTO SAVE
+
+Everything inside the dashboard must save automatically.
+
+There should never be a Save button for normal settings.
+
+Every modification should be saved immediately.
+
+If the administrator closes the browser, refreshes the page, loses internet, or the computer shuts down unexpectedly, nothing should be lost.
+
+When the administrator logs in again, the dashboard must restore:
+
+Last Selected Server
+
+Last Opened Page
+
+Last Edited Panel
+
+Draft Forms
+
+Draft Embeds
+
+Theme
+
+Language
+
+Search Filters
+
+Recent Tickets
+
+Every unfinished change.
+
+Everything should continue exactly where it was left.
+
+---
+
+# RESPONSIVE DESIGN
+
+The dashboard must work perfectly on:
+
+Windows
+
+macOS
+
+Linux
+
+ChromeOS
+
+Desktop Computers
+
+Gaming PCs
+
+Laptops
+
+Touchscreen Laptops
+
+Android Tablets
+
+iPads
+
+Large Monitors
+
+Ultra-Wide Monitors
+
+All modern browsers.
+
+---
+
+# PROJECT STRUCTURE
+
+The entire project must be organized into only four files.
+
+No additional source files should be created unless absolutely required by external dependencies.
+
+The project should remain clean, organized, and easy to maintain while keeping the four-file structure.
+
+---
+
+# FINAL REQUIREMENTS
+
+The project must be fully production-ready.
+
+No placeholder code.
+
+No TODO comments.
+
+No unfinished features.
+
+No fake implementations.
+
+Every feature should be completely functional.
+
+The dashboard should have a modern premium UI with smooth animations, loading indicators, responsive layouts, searchable tables, pagination, drag-and-drop support where appropriate, and instant real-time synchronization.
+
+The project should support unlimited Discord servers and remain fast even with thousands of tickets.
+
+Finally, the entire platform must fully support both English and Arabic. Every page, button, form, notification, and dashboard interface must be translated. Arabic should automatically use RTL layout, English should automatically use LTR layout, and the selected language must be remembered automatically for each administrator on every login.
+# DASHBOARD AUTO SAVE
+
+The dashboard must automatically save everything in real time.
+
+Every change should be saved instantly without requiring the user to press a Save button.
+
+The system must automatically save:
+
+- Ticket Panels
+- Embeds
+- Buttons
+- Dropdown Menus
+- Forms
+- Questions
+- Categories
+- Departments
+- Roles
+- Channels
+- Permissions
+- Automation Rules
+- AI Settings
+- Themes
+- Languages
+- Dashboard Layout
+- Statistics Settings
+- Notifications
+- Logs Settings
+- Transcript Settings
+- Security Settings
+- API Settings
+- Extensions
+- Backup Settings
+- Every Dashboard Configuration
+
+If the browser is refreshed, closed, crashes, loses internet, or the computer shuts down unexpectedly, no progress should ever be lost.
+
+When the administrator logs in again, the dashboard must automatically restore:
+
+- Last Selected Discord Server
+- Last Opened Dashboard Page
+- Last Edited Ticket Panel
+- Last Opened Form
+- Last Edited Embed
+- Last Search
+- Last Filters
+- Recently Opened Tickets
+- Theme
+- Language
+- Sidebar State
+- Every Unsaved Draft
+- Every Dashboard Setting
+
+Every Discord server must have its own automatically saved configuration.
+
+Nothing from one server should affect another server.
+
+The administrator should never lose their work.
+
+All settings should remain permanently saved until manually changed or deleted.
